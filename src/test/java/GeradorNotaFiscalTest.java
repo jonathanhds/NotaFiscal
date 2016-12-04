@@ -11,7 +11,7 @@ public class GeradorNotaFiscalTest {
         Pedido pedido = new Pedido("Jonathan", 1000.0, 1);
 
         // When
-        NotaFiscal nf = new GeradorNotaFiscal(new RepositorioNFMock()).gerar(pedido);
+        NotaFiscal nf = new GeradorNotaFiscal(new RepositorioNFMock(), new SAPMock()).gerar(pedido);
 
         // Then
         assertEquals(940.0, nf.getValor(), 0.00001);
@@ -24,10 +24,23 @@ public class GeradorNotaFiscalTest {
         RepositorioNFMock repositorioNF = new RepositorioNFMock();
 
         // When
-        NotaFiscal nf = new GeradorNotaFiscal(repositorioNF).gerar(pedido);
+        new GeradorNotaFiscal(repositorioNF, new SAPMock()).gerar(pedido);
 
         // Then
         assertTrue(repositorioNF.salvouNotaFiscal());
+    }
+
+    @Test
+    public void deveEnviarNotaFiscalParaSistemaSAP() {
+        // Given
+        Pedido pedido = new Pedido("Jonathan", 1000.0, 1);
+        SAPMock sap = new SAPMock();
+
+        // When
+        new GeradorNotaFiscal(new RepositorioNFMock(), sap).gerar(pedido);
+
+        // Then
+        assertTrue(sap.enviouNotaFiscal());
     }
 
 }

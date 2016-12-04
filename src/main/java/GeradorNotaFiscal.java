@@ -4,8 +4,11 @@ public class GeradorNotaFiscal {
 
     private RepositorioNF repositorioNF;
 
-    public GeradorNotaFiscal(RepositorioNF repositorioNF) {
+    private SAP sap;
+
+    public GeradorNotaFiscal(RepositorioNF repositorioNF, SAP sap) {
         this.repositorioNF = repositorioNF;
+        this.sap = sap;
     }
 
     public NotaFiscal gerar(Pedido pedido) {
@@ -16,6 +19,8 @@ public class GeradorNotaFiscal {
         );
 
         this.repositorioNF.persistir(nf);
+
+        this.sap.enviar(nf);
 
         return nf;
     }
